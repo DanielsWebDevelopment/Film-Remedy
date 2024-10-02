@@ -909,6 +909,27 @@ html {
   z-index: 10;
 }
 
+.close-camera {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.close-camera:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
 .panel__container
   .panel-content
   .panel-header
