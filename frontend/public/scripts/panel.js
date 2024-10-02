@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function startCamera() {
         try {
+            hideResult();
             stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }});
             video.srcObject = stream;
             video.style.display = 'block';
@@ -39,7 +40,8 @@ document.addEventListener('DOMContentLoaded', function() {
         canvas.getContext('2d').drawImage(video, 0, 0);
         video.style.display = 'none';
         canvas.style.display = 'block';
-        
+
+        hideResult();
         const imageData = canvas.toDataURL('image/jpeg');
         recognizeMovie(imageData);
     }
@@ -59,10 +61,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const movieInfo = await response.json();
-            displayResult(movieInfo);
+
+            if (movieInfo.title) {
+                displayResult(movieInfo);
+            } else {
+                throw new Error('No movie found');
+            }
         } catch (error) {
             console.error('Error recognizing movie:', error);
-            alert('Recognition failed. Please try again.');
+            alert('No movie found.Recognition failed. Please try again.');
+            hideResult();
         } finally {
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
@@ -71,9 +79,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displayResult(movieInfo) {
+        panelTitle.style.display ="block";
+        panelRating.style.display = "block";
+        panelDesc.style.display = "block";
+        
         panelTitle.innerHTML = `<strong><p>${movieInfo.title}</p></strong><small>Year: ${movieInfo.year}</small>`;
         panelRating.innerHTML = generateStarRating(movieInfo.rating);
         panelDesc.innerHTML = `<p>${movieInfo.description}</p>`;
+    }
+
+     function hideResult() {
+        panelTitle.style.display = "none";
+        panelRating.style.display = "none";
+        panelDesc.style.display = "none";
     }
 
     // This function generates HTML for a star rating based on the movie's rating.
