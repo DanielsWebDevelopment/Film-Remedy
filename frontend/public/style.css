@@ -142,16 +142,6 @@ html {
   text-decoration: none;
   background: hsl(152, 100%, 36%);
   border-radius: 4px;
-  animation: bounce 1s ease-in-out infinite alternate;
-}
-
-@keyframes bounce {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(12%);
-  }
 }
 
 /* ============= Discovery Sub Section */
