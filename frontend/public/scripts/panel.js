@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const scanningOverlay = document.getElementById('scanning-overlay');
 
     let stream = null;
+    let scanning = false;
 
     if (cameraButton) {
         cameraButton.addEventListener('click', () => {
@@ -26,28 +27,36 @@ document.addEventListener('DOMContentLoaded', function() {
             video.style.display = 'block';
             video.play();
             canvas.style.display = 'none';
-            canningOverlay.style.display = 'block';
+            startScanning();
         } catch (err) {
             console.error('Error accessing camera:', err);
             alert('Failed to access the camera. Please make sure you have given permission and try again');
         }
     }
 
-    if (video) {
-        video.addEventListener('click', captureImage);
+    function startScanning() {
+        scanning = true;
+        scanningOverlay.style.display = "block";
+        hideResult();
+        scanFrame();
     }
 
-    function captureImage() {
+    function stopScanning() {
+        scanning = false;
+        scanningOverlay.style.display = "none";
+    }
+
+    async function scanFrame() {
+        if (!scanning) return;
+    
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0);
-        video.style.display = 'none';
-        canvas.style.display = 'block';
-        scanningOverlay.style.display = 'none';
-
-        hideResult();
+    
         const imageData = canvas.toDataURL('image/jpeg');
-        recognizeMovie(imageData);
+        await recognizeMovie(imageData);
+    
+        setTimeout(scanFrame, 5000);
     }
 
     async function recognizeMovie(imageData) {
@@ -68,17 +77,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (movieInfo.title) {
                 displayResult(movieInfo);
+                stopScanning();
             } else {
-                throw new Error('No movie found');
+                hideResult();
             }
         } catch (error) {
             console.error('Error recognizing movie:', error);
-            alert('No movie found. Recognition failed. Please try again.');
-            hideResult();
-        } finally {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-            }
         }
     }
 
@@ -86,18 +90,18 @@ document.addEventListener('DOMContentLoaded', function() {
         panelTitle.style.display ="block";
         panelRating.style.display = "block";
         panelDesc.style.display = "block";
-        
+
         panelTitle.innerHTML = `<strong><p>${movieInfo.title}</p></strong><small>Year: ${movieInfo.year}</small>`;
         panelRating.innerHTML = generateStarRating(movieInfo.rating);
         panelDesc.innerHTML = `<p>${movieInfo.description}</p>`;
     }
 
-     function hideResult() {
+    function hideResult() {
         panelTitle.style.display = "none";
         panelRating.style.display = "none";
         panelDesc.style.display = "none";
-        scanningOverlay.style.display = "none";
     }
+
 
     // This function generates HTML for a star rating based on the movie's rating.
     function generateStarRating(rating) {
@@ -117,17 +121,21 @@ document.addEventListener('DOMContentLoaded', function() {
         return starsHtml;
     }
 
-   if (closeButton) {
+    if (closeButton) {
         closeButton.addEventListener('click', function() {
+            // Stopping the video stream
+            stopScanning();
             if (stream) {
                 stream.getTracks().forEach(function(track) {
                     track.stop();
                 });
             }
+
             video.srcObject = null;
+
+            // Hiding the video camera element
             video.style.display = 'none';
-            canvas.style.display = 'none';
-            closeButton.style.display = 'none';
+            hideResult();
         });
     }
 });
