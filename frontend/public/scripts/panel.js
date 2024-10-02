@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const panelRating = document.getElementById('panel-rating');
     const panelDesc = document.getElementById('panel-desc');
     const cameraButton = document.getElementById('camera-button');
+    const closeButton = document.getElementById('close-camera');
     const scanningOverlay = document.getElementById('scanning-overlay');
 
     let stream = null;
@@ -115,79 +116,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return starsHtml;
     }
+
+    if (closeButton) {
+        closeButton.addEventListener('click', function() {
+            // Stop the video stream
+            if (stream) {
+                stream.getTracks().forEach(function(track) {
+                    track.stop();
+                });
+            }
+
+            video.srcObject = null;
+            videoCamera.style.display = 'none';
+        });
+    }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// document.addEventListener('DOMContentLoaded', function() {
-//     const PanelImage = document.getElementById('panel-image');
-//     const panelTitle = document.getElementById('panel-title');
-//     const panelRating = document.getElementById('panel-rating');
-//     const panelDesc = document.getElementById('panel-desc');
-//     const cameraButton = document.getElementById('camera-button');
-
-//     const apiKey = '93ae8da6a962b00c7f9b494442c5b320';
-    
-//     const movieIds = [
-//         168530, 323675, 30535, 778106, 1082203, 533535, 365177, 646097, 1022789, 519182, 917496, 573435, 718821, 970347, 
-//         1079091, 945961, 831815, 748783, 762441, 1226578, 704239, 1115396, 5492, 1032823, 1130053, 1160018, 653346, 
-//         1129598, 1049574, 1094138, 1114513, 950526, 698687, 588648, 826510, 1066262, 1140168, 786892, 14258, 929590, 
-//         823464, 1091298, 974262, 1010581, 1311550, 1059064, 1011985, 1134424, 1209290, 404378, 1281826, 1216191, 799583, 
-//         804616, 299536, 940551, 748167, 14836, 1174618, 150540, 157336, 348, 1154864, 1104844, 1272228, 938614, 667538, 
-//         385687, 1152624, 729165, 569094, 603692, 609681, 634649, 693134, 1147400, 502356, 1207898, 646683, 1184918, 
-//         931461, 177572, 787699, 335983, 580489, 675353, 671, 1096342, 1280440, 1227624, 1086747, 9495, 122, 120, 1096197, 
-//         3933, 746036, 315162, 1139817, 293660, 969492, 872585, 955555
-//     ];
-
-//     const tvShowIds = [
-//         63770, 2224, 1508, 65701, 59941, 4551, 31132, 2123, 65763, 30745, 246331, 68073, 4448, 17404, 651, 210078, 39373, 
-//         102321, 60694, 1416, 456, 13943, 10382, 1749, 80587, 2734, 4614, 1554, 4239, 4429, 37680, 655, 21755, 1622, 580, 
-//         47480, 67136, 62974, 94997, 60625, 2691, 217216, 62201, 72089, 48891, 46910, 88924, 4629, 4630, 1434, 32726, 71712, 
-//         32692, 1431, 764, 1920, 2637, 4057, 6145, 4238, 60735, 29173, 4250, 32798, 65334, 67198, 2883, 2612, 96650, 69478, 
-//         218643, 2962, 38693, 1855, 4229, 39272, 62286, 2710, 11089, 37606, 1408, 693, 5146, 79061, 209247, 62181, 58841, 
-//         314, 153312, 60059, 4033, 79593, 66573, 1667, 120089, 25992, 1400, 45, 1399, 59717, 95, 44006, 4601, 549, 10283, 
-//         1620, 63333, 87917, 1405, 71790, 17937, 60989, 39340, 95479, 2191, 4616, 6390, 2190, 79744, 61662, 1433, 32390, 
-//         11105, 30703, 31917, 8592, 13319, 75006
-//     ];
-
-//     // cameraButton.addEventListener('click', async () => {
-        
-//     // })
-// });
