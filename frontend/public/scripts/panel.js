@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const panelRating = document.getElementById('panel-rating');
     const panelDesc = document.getElementById('panel-desc');
     const cameraButton = document.getElementById('camera-button');
+    const scanningOverlay = document.getElementById('scanning-overlay');
 
     let stream = null;
 
@@ -71,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (error) {
             console.error('Error recognizing movie:', error);
-            alert('No movie found.Recognition failed. Please try again.');
+            alert('No movie found. Recognition failed. Please try again.');
             hideResult();
         } finally {
             if (stream) {
