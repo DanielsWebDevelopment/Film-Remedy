@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
             video.style.display = 'block';
             video.play();
             canvas.style.display = 'none';
+            canningOverlay.style.display = 'block';
         } catch (err) {
             console.error('Error accessing camera:', err);
             alert('Failed to access the camera. Please make sure you have given permission and try again');
@@ -40,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
         canvas.getContext('2d').drawImage(video, 0, 0);
         video.style.display = 'none';
         canvas.style.display = 'block';
+        scanningOverlay.style.display = 'none';
 
         hideResult();
         const imageData = canvas.toDataURL('image/jpeg');
@@ -92,6 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         panelTitle.style.display = "none";
         panelRating.style.display = "none";
         panelDesc.style.display = "none";
+        scanningOverlay.style.display = "none";
     }
 
     // This function generates HTML for a star rating based on the movie's rating.
