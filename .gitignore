@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Ignore Google Cloud Service Account Credentials
+frontend/public/config/*.json
+
+# Ignore all .json files at the root level
+/*.json
+
+# But don't ignore these specific JSON files
+!package.json
+!package-lock.json
