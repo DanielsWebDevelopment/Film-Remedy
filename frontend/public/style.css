@@ -111,12 +111,22 @@ html {
 
 .header-container .header-title {
   text-align: center;
+  animation: fadeUp 0.5s ease-in forwards;
 }
 
 .header-container .header-title small {
   font-size: 1.1rem;
   font-weight: 500;
   color: hsl(0, 0%, 100%);
+}
+
+@keyframes fadeUp {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-12px);
+  }
 }
 
 .header-container .header-title h1 {
@@ -142,6 +152,19 @@ html {
   text-decoration: none;
   background: hsl(152, 100%, 36%);
   border-radius: 4px;
+}
+
+.header-container .start_cta {
+  animation: bounce 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes bounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(12%);
+  }
 }
 
 /* ============= Discovery Sub Section */
