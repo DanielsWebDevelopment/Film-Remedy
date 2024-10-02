@@ -681,6 +681,17 @@ html {
   padding: 0 30px;
 }
 
+@media screen and (max-width: 600px) {
+  .navbar.fixed-bottom .bottom-nav-item .bottom-nav-items {
+    margin-top: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    padding: 0 30px;
+  }
+}
+
 .navbar.fixed-bottom .bottom-nav-item .bottom-nav-items .b-nav_item i {
   color: hsl(0, 0%, 19%);
   font-size: 2rem;
