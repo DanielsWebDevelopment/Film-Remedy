@@ -117,17 +117,17 @@ document.addEventListener('DOMContentLoaded', function() {
         return starsHtml;
     }
 
-    if (closeButton) {
+   if (closeButton) {
         closeButton.addEventListener('click', function() {
-            // Stop the video stream
             if (stream) {
                 stream.getTracks().forEach(function(track) {
                     track.stop();
                 });
             }
-
             video.srcObject = null;
-            videoCamera.style.display = 'none';
+            video.style.display = 'none';
+            canvas.style.display = 'none';
+            closeButton.style.display = 'none';
         });
     }
 });
