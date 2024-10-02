@@ -892,6 +892,23 @@ html {
   align-items: center;
 }
 
+.panel-image {
+  position: relative;
+}
+
+.scanning-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%
+  transform: translate(-50%, -50%);
+  background-color: rgba(0,0,0,0.7);
+  color: #fefefe;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 1rem;
+  z-index: 10;
+}
+
 .panel__container
   .panel-content
   .panel-header
