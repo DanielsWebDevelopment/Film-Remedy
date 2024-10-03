@@ -1,6 +1,3 @@
-import { getDatabase, ref, push, set } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
-import { auth, database } from '../config/config.js';
-
 document.addEventListener('DOMContentLoaded', function() {
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
@@ -79,16 +76,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const movieInfo = await response.json();
 
             if (movieInfo.title) {
-                const moviesRef = ref(database, 'movies');
-                const newMovieRef = push(moviesRef);
-                await set(newMovieRef, {
-                    title: movieInfo.title,
-                    year: movieInfo.year,
-                    rating: movieInfo.rating,
-                    scannedAt: new Date().toISOString()
-                });
                 displayResult(movieInfo);
                 stopScanning();
+            } else {
+                hideResult();
             }
         } catch (error) {
             console.error('Error recognizing movie:', error);
