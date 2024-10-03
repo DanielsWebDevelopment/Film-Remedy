@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error in scanFrame:', error);
             displayError('An error occurred while scanning. Please try again.');
         }
-        setTimeout(scanFrame, 3000);
+        setTimeout(scanFrame, 1000);
     }
 
     async function recognizeMovie(imageData) {
