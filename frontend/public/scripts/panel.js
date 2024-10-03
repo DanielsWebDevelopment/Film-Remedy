@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const imageData = canvas.toDataURL('image/jpeg');
         await recognizeMovie(imageData);
     
-        setTimeout(scanFrame, 5000);
+        setTimeout(scanFrame, 3000);
     }
 
     async function recognizeMovie(imageData) {
@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (error) {
             console.error('Error recognizing movie:', error);
+            setTimeout(scanFrame, 3000);
         }
     }
 
@@ -94,6 +95,8 @@ document.addEventListener('DOMContentLoaded', function() {
         panelTitle.innerHTML = `<strong><p>${movieInfo.title}</p></strong><small>Year: ${movieInfo.year}</small>`;
         panelRating.innerHTML = generateStarRating(movieInfo.rating);
         panelDesc.innerHTML = `<p>${movieInfo.description}</p>`;
+
+        document.getElementById('panel-content').scrollIntoView({ behavior: 'smooth' });
     }
 
     function hideResult() {
