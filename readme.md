@@ -43,7 +43,7 @@ Film Remedy is a web application that allows users to identify movies by capturi
 ## Testing
 
 - Local testing implemented
-- Mobile testing pending (requires deployment)
+- Mobile testing - In progress
 
 ## Deployment
 
