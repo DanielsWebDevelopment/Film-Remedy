@@ -1,21 +1,22 @@
+# Welcome to film Remedy
 Film Remedy is a web application that allows users to identify movies by capturing images of movie posters or scenes using their device's camera.
 
 ## Features Implemented
 
-1. **Dashboard Page**
+1. ### **Dashboard Page**
    - Camera button to initiate movie recognition process
    - Redirects to Panel page for image capture
 
-2. **Panel Page**
+2. ### **Panel Page**
    - Automatic camera activation
    - Image capture functionality
    - Display of recognized movie information
 
-3. **Movie Recognition**
+3. ### **Movie Recognition**
    - Integration with Google Cloud Vision API for image analysis
    - Integration with TMDB API for movie information retrieval
 
-4. **Server-Side Processing**
+4. ### **Server-Side Processing**
    - Express.js server handling API requests
    - Image processing and API integrations
 
