@@ -101,13 +101,14 @@ app.post('/api/movie-capture', async (req, res) => {
         const labels = result.labelAnnotations;
 
         // Using all labels for a more comprehensive search
-        const searchTerm = labels.map(label => label.description).join(' ');
+        const searchTerms = labels.slice(0, 5).map(label => label.description);
+        const searchQuery = searchTerms.join(' ');
 
         // Changed from 'movie' to 'multi' to search for both movies and TV shows
         const tmdbResponse = await axios.get('https://api.themoviedb.org/3/search/multi', {
             params: {
                 api_key: TMDB_API_KEY,
-                query: searchTerm,
+                query: searchQuery,
             }
         });
         
