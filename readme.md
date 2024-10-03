@@ -1,5 +1,5 @@
 # Welcome to film Remedy
-Film Remedy is a web application that allows users to identify movies by capturing images of movie posters or scenes using their device's camera.
+Film Remedy is a web application (soon to be mobile) that allows users to identify movies by scan capturing tv shows and films using their device's camera.
 
 ## Features Implemented
 
