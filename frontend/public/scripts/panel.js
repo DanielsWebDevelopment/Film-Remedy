@@ -13,7 +13,17 @@ document.addEventListener('DOMContentLoaded', function() {
     let scanning = false;
 
     if (cameraButton) {
-        cameraButton.addEventListener('click', startCamera);
+        cameraButton.addEventListener('click', function() {
+            if (window.location.pathname.includes('dashboard')) {
+                window.location.href = './panel.html';
+            } else {
+                startCamera();
+            }
+        });
+    }
+
+    if (window.location.pathname.includes('panel')) {
+        startCamera();
     }
 
     async function startCamera() {
@@ -134,11 +144,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function hideResult() {
-        if (panelTitle && panelRating && panelDesc) {
-            panelTitle.style.display = "none";
-            panelRating.style.display = "none";
-            panelDesc.style.display = "none";
-        }
+        if (panelTitle) panelTitle.style.display = "none";
+        if (panelRating) panelRating.style.display = "none";
+        if (panelDesc) panelDesc.style.display = "none";
     }
 
     function generateStarRating(rating) {
