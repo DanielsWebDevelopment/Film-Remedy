@@ -100,42 +100,53 @@ app.post('/api/movie-capture', async (req, res) => {
         const [result] = await client.labelDetection(Buffer.from(image, 'base64'));
         const labels = result.labelAnnotations;
 
-        // Filtering the labels to only include those related to movies
-        const movieLabels = labels.filter(label => 
-            ['movie', 'film', 'cinema', 'poster', 'television', 'screen', 'video', 'entertainment', 'media'].includes(label.description.toLowerCase())
-        );
+        // Using all labels for a more comprehensive search
+        const searchTerm = labels.map(label => label.description).join(' ');
 
-        // Checking to see if any movie-related labels were found
-        if (movieLabels.length > 0) { 
-            const searchTerm = movieLabels.slice(0, 3).map(label => label.description).join(' ');
-            const tmdbResponse = await axios.get('https://api.themoviedb.org/3/search/movie', {
-                params: {
-                  api_key: TMDB_API_KEY,
-                  query: searchTerm,
-                }
-              });
-            
-            if (tmdbResponse.data.results.length > 0) {
-                // If a movie was found, sends a JSON response with the movie details.
-                const movie = tmdbResponse.data.results[0];
-                res.json({
-                    title: movie.title,
-                    year: new Date(movie.release_date).getFullYear(),
-                    description: movie.overview,
-                    rating: movie.vote_average
-                });
+        // Changed from 'movie' to 'multi' to search for both movies and TV shows
+        const tmdbResponse = await axios.get('https://api.themoviedb.org/3/search/multi', {
+            params: {
+                api_key: TMDB_API_KEY,
+                query: searchTerm,
+            }
+        });
+        
+        if (tmdbResponse.data.results.length > 0) {
+            const item = tmdbResponse.data.results[0];
+            let responseData;
+
+            // Handling both movie and TV show results
+            if (item.media_type === 'movie') {
+                responseData = {
+                    title: item.title,
+                    year: new Date(item.release_date).getFullYear(),
+                    description: item.overview,
+                    rating: item.vote_average,
+                    type: 'movie'
+                };
+            } else if (item.media_type === 'tv') {
+                responseData = {
+                    title: item.name,
+                    year: new Date(item.first_air_date).getFullYear(),
+                    description: item.overview,
+                    rating: item.vote_average,
+                    type: 'tv'
+                };
+            }
+
+            if (responseData) {
+                res.json(responseData);
             } else {
-                res.status(404).json({ error: 'No Matching movie found' });
+                res.status(404).json({ error: 'No matching movie or TV show found' });
             }
         } else {
-            res.status(400).json({ error: 'no movie-related content detected in the image' });
+            res.status(404).json({ error: 'No matching movie or TV show found' });
         }
     } catch (error) {
         console.error('Error during movie recognition', error);
         res.status(500).json({ error: 'Movie recognition failed' });
     }
 });
-
 
 app.listen(PORT, () => {
     console.log(`Server running on ${PORT}`);
