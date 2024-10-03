@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const cameraButton = document.getElementById('camera-button');
     const closeButton = document.getElementById('close-camera');
     const scanningOverlay = document.getElementById('scanning-overlay');
+    const statusMessage = document.getElementById('status-message');
 
     let stream = null;
     let scanning = false;
@@ -48,20 +49,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function scanFrame() {
         if (!scanning) return;
-    
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-    
-        const imageData = canvas.toDataURL('image/jpeg');
-        await recognizeMovie(imageData);
-    
+
+        try {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+
+            const imageData = canvas.toDataURL('image/jpeg');
+            await recognizeMovie(imageData);
+        } catch (error) {
+            console.error('Error in scanFrame:', error);
+            displayError('An error occurred while scanning. Please try again.');
+        }
         setTimeout(scanFrame, 3000);
     }
 
     async function recognizeMovie(imageData) {
         try {
-            const response = await fetch('/api/movie-capture', {
+            displayStatus('Analyzing image...'); 
+            const response = await fetch('https://film-remedy.onrender.com/api/movie-capture', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -79,12 +85,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 displayResult(movieInfo);
                 stopScanning();
             } else {
+                displayStatus('No movie recognized. Keep scanning...');
                 hideResult();
             }
         } catch (error) {
             console.error('Error recognizing movie:', error);
-            setTimeout(scanFrame, 3000);
         }
+    }
+
+        function displayStatus(message) {
+        statusMessage.textContent = message;
+        statusMessage.style.display = 'block';
+        statusMessage.style.color = 'black'; 
+    }
+
+    // New function for displaying error messages
+    function displayError(message) {
+        statusMessage.textContent = message;
+        statusMessage.style.color = 'red';
+        statusMessage.style.display = 'block';
     }
 
     function displayResult(movieInfo) {
@@ -104,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
         panelRating.style.display = "none";
         panelDesc.style.display = "none";
     }
-
 
     // This function generates HTML for a star rating based on the movie's rating.
     function generateStarRating(rating) {
@@ -141,4 +159,5 @@ document.addEventListener('DOMContentLoaded', function() {
             hideResult();
         });
     }
+    startCamera();
 });
