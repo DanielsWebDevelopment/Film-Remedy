@@ -13,50 +13,56 @@ document.addEventListener('DOMContentLoaded', function() {
     let scanning = false;
 
     if (cameraButton) {
-        cameraButton.addEventListener('click', () => {
-            window.location.href = '/panel';
-        });
-    } else if (video) {
-        startCamera();
+        cameraButton.addEventListener('click', startCamera);
     }
 
     async function startCamera() {
         try {
             hideResult();
             stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }});
-            video.srcObject = stream;
-            video.style.display = 'block';
-            video.play();
-            canvas.style.display = 'none';
+            if (video) {
+                video.srcObject = stream;
+                video.style.display = 'block';
+                video.play();
+            }
+            if (canvas) {
+                canvas.style.display = 'none';
+            }
             startScanning();
         } catch (err) {
             console.error('Error accessing camera:', err);
-            alert('Failed to access the camera. Please make sure you have given permission and try again');
+            displayError('Failed to access the camera. Please make sure you have given permission and try again');
         }
     }
 
     function startScanning() {
         scanning = true;
-        scanningOverlay.style.display = "block";
+        if (scanningOverlay) {
+            scanningOverlay.style.display = "block";
+        }
         hideResult();
         scanFrame();
     }
 
     function stopScanning() {
         scanning = false;
-        scanningOverlay.style.display = "none";
+        if (scanningOverlay) {
+            scanningOverlay.style.display = "none";
+        }
     }
 
     async function scanFrame() {
         if (!scanning) return;
 
         try {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
+            if (canvas && video) {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0);
 
-            const imageData = canvas.toDataURL('image/jpeg');
-            await recognizeMovie(imageData);
+                const imageData = canvas.toDataURL('image/jpeg');
+                await recognizeMovie(imageData);
+            }
         } catch (error) {
             console.error('Error in scanFrame:', error);
             displayError('An error occurred while scanning. Please try again.');
@@ -90,41 +96,51 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (error) {
             console.error('Error recognizing movie:', error);
+            displayError('Failed to recognize movie. Please try again.');
         }
     }
 
-        function displayStatus(message) {
-        statusMessage.textContent = message;
-        statusMessage.style.display = 'block';
-        statusMessage.style.color = 'black'; 
+    function displayStatus(message) {
+        if (statusMessage) {
+            statusMessage.textContent = message;
+            statusMessage.style.display = 'block';
+            statusMessage.style.color = 'black'; 
+        }
     }
 
-    // New function for displaying error messages
     function displayError(message) {
-        statusMessage.textContent = message;
-        statusMessage.style.color = 'red';
-        statusMessage.style.display = 'block';
+        if (statusMessage) {
+            statusMessage.textContent = message;
+            statusMessage.style.color = 'red';
+            statusMessage.style.display = 'block';
+        }
     }
 
     function displayResult(movieInfo) {
-        panelTitle.style.display ="block";
-        panelRating.style.display = "block";
-        panelDesc.style.display = "block";
+        if (panelTitle && panelRating && panelDesc) {
+            panelTitle.style.display = "block";
+            panelRating.style.display = "block";
+            panelDesc.style.display = "block";
 
-        panelTitle.innerHTML = `<strong><p>${movieInfo.title}</p></strong><small>Year: ${movieInfo.year}</small>`;
-        panelRating.innerHTML = generateStarRating(movieInfo.rating);
-        panelDesc.innerHTML = `<p>${movieInfo.description}</p>`;
+            panelTitle.innerHTML = `<strong><p>${movieInfo.title}</p></strong><small>Year: ${movieInfo.year}</small>`;
+            panelRating.innerHTML = generateStarRating(movieInfo.rating);
+            panelDesc.innerHTML = `<p>${movieInfo.description}</p>`;
 
-        document.getElementById('panel-content').scrollIntoView({ behavior: 'smooth' });
+            const panelContent = document.getElementById('panel-content');
+            if (panelContent) {
+                panelContent.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     }
 
     function hideResult() {
-        panelTitle.style.display = "none";
-        panelRating.style.display = "none";
-        panelDesc.style.display = "none";
+        if (panelTitle && panelRating && panelDesc) {
+            panelTitle.style.display = "none";
+            panelRating.style.display = "none";
+            panelDesc.style.display = "none";
+        }
     }
 
-    // This function generates HTML for a star rating based on the movie's rating.
     function generateStarRating(rating) {
         const fullStars = Math.floor(rating / 2);
         const halfStar = rating % 2 >= 1;
@@ -144,7 +160,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (closeButton) {
         closeButton.addEventListener('click', function() {
-            // Stopping the video stream
             stopScanning();
             if (stream) {
                 stream.getTracks().forEach(function(track) {
@@ -152,12 +167,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
 
-            video.srcObject = null;
-
-            // Hiding the video camera element
-            video.style.display = 'none';
+            if (video) {
+                video.srcObject = null;
+                video.style.display = 'none';
+            }
             hideResult();
         });
     }
-    startCamera();
 });
