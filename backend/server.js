@@ -95,7 +95,6 @@ app.post('/api/movie-capture', async (req, res) => {
     const { imageData } = req.body;
 
     try {
-        // removes the "data:image/jpeg;base64," prefix from base64 encoded images.
         const image = imageData.split(',')[1];
 
         const [result] = await client.labelDetection(Buffer.from(image, 'base64'));
@@ -103,12 +102,12 @@ app.post('/api/movie-capture', async (req, res) => {
 
         // Filtering the labels to only include those related to movies
         const movieLabels = labels.filter(label => 
-            ['movie', 'film', 'cinema', 'poster'].includes(label.description.toLowerCase())
+            ['movie', 'film', 'cinema', 'poster', 'television', 'screen', 'video', 'entertainment', 'media'].includes(label.description.toLowerCase())
         );
 
         // Checking to see if any movie-related labels were found
         if (movieLabels.length > 0) { 
-            const searchTerm = movieLabels[0].description;
+            const searchTerm = movieLabels.slice(0, 3).map(label => label.description).join(' ');
             const tmdbResponse = await axios.get('https://api.themoviedb.org/3/search/movie', {
                 params: {
                   api_key: TMDB_API_KEY,
