@@ -46,11 +46,10 @@ Film Remedy is a web application that allows users to identify movies by capturi
 
 ## Deployment
 
-- Not yet deployed
-- Plans to deploy for comprehensive mobile testing
+- Frontend Deployed Via Netlify
+- Backend Deployed via Render
 
 ## Notes
 
 - Firebase configuration and Google Cloud Vision API setup completed
-- Config folder located inside the frontend folder
 - Camera functionality needs thorough testing on various devices and browsers
