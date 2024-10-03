@@ -29,7 +29,8 @@ Film Remedy is a web application that allows users to identify movies by capturi
 ## Current Status
 
 - Basic functionality implemented
-- Camera capture and movie recognition working
+- Camera capture working
+- movie recognition - In Progress
 - UI elements in place for dashboard and panel pages
 
 ## Next Steps
