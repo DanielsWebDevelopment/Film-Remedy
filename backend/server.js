@@ -35,7 +35,7 @@ app.use(session({
      } 
 }));
 
-const TMDB_API_KEY = process.env.TMBD_API_KEY;
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
 const client = new vision.ImageAnnotatorClient({
     credentials: {
