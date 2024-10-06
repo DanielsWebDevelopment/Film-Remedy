@@ -96,8 +96,13 @@ app.post('/api/movie-capture', async (req, res) => {
 
     try {
         const image = imageData.split(',')[1];
+        // remove after testing
+        console.log('Received image data size:', image.length);
 
         const [result] = await client.labelDetection(Buffer.from(image, 'base64'));
+        // remove after testing
+        console.log('Labels:', result.labelAnnotations.map(label => label.description));
+        
         const labels = result.labelAnnotations;
 
         // Using all labels for a more comprehensive search
