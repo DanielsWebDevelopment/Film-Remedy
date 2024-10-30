@@ -93,33 +93,30 @@ app.get("/support", (req, res) => {
 
 app.post('/api/movie-capture', async (req, res) => {
     const { imageData } = req.body;
+
     try {
         const image = imageData.split(',')[1];
-        
         const request = {
             image: { content: image },
             features: [{ type: 'LABEL_DETECTION' }]
         };
-        
         const [result] = await client.annotateImage(request);
-
-        // Retrieve labels from the API result
-        const labels = result.labelAnnotations;
         
-        const searchTerms = labels.slice(0, 5).map(label => label.description).join(' ');
+        const labels = result.labelAnnotations;
+        const searchTerms = labels.slice(0, 5).map(label => label.description);
+        const searchQuery = searchTerms.join(' ');
 
         const tmdbResponse = await axios.get('https://api.themoviedb.org/3/search/multi', {
             params: {
                 api_key: TMDB_API_KEY,
-                query: searchTerms,
+                query: searchQuery,
             }
         });
-
-       if (tmdbResponse.data.results.length > 0) {
+        
+        if (tmdbResponse.data.results.length > 0) {
             const item = tmdbResponse.data.results[0];
             let responseData;
-            
-            // If it's a movie
+
             if (item.media_type === 'movie') {
                 responseData = {
                     title: item.title,
@@ -128,9 +125,7 @@ app.post('/api/movie-capture', async (req, res) => {
                     rating: item.vote_average,
                     type: 'movie'
                 };
-            }
-            // If it's a TV show
-            else if (item.media_type === 'tv') {
+            } else if (item.media_type === 'tv') {
                 responseData = {
                     title: item.name,
                     year: new Date(item.first_air_date).getFullYear(),
@@ -140,7 +135,6 @@ app.post('/api/movie-capture', async (req, res) => {
                 };
             }
 
-            // Send response with movie or TV show data
             if (responseData) {
                 res.json(responseData);
             } else {
@@ -150,10 +144,12 @@ app.post('/api/movie-capture', async (req, res) => {
             res.status(404).json({ error: 'No matching movie or TV show found' });
         }
     } catch (error) {
-        console.error('Error during movie recognition', error);  // Log any errors for debugging
+        console.error('Error during movie recognition', error);
         res.status(500).json({ error: 'Movie recognition failed' });
     }
 });
+
+
 
 app.listen(PORT, () => {
     console.log(`Server running on ${PORT}`);
