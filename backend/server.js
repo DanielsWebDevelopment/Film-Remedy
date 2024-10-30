@@ -93,30 +93,35 @@ app.get("/support", (req, res) => {
 
 app.post('/api/movie-capture', async (req, res) => {
     const { imageData } = req.body;
-
     try {
+        // Extract base64 image data
         const image = imageData.split(',')[1];
+        // Prepare the request object for Vision API
         const request = {
             image: { content: image },
             features: [{ type: 'LABEL_DETECTION' }]
         };
+        // Call Vision API with the correct request
         const [result] = await client.annotateImage(request);
-        
+
+        // Retrieve labels from the API result
         const labels = result.labelAnnotations;
+        // Use top 5 labels for search query
         const searchTerms = labels.slice(0, 5).map(label => label.description);
         const searchQuery = searchTerms.join(' ');
 
+        // Request TMDB API for movie/TV show info
         const tmdbResponse = await axios.get('https://api.themoviedb.org/3/search/multi', {
             params: {
                 api_key: TMDB_API_KEY,
                 query: searchQuery,
             }
         });
-        
+
         if (tmdbResponse.data.results.length > 0) {
             const item = tmdbResponse.data.results[0];
             let responseData;
-
+            // Handle movie results
             if (item.media_type === 'movie') {
                 responseData = {
                     title: item.title,
@@ -125,6 +130,7 @@ app.post('/api/movie-capture', async (req, res) => {
                     rating: item.vote_average,
                     type: 'movie'
                 };
+            // Handle TV show results
             } else if (item.media_type === 'tv') {
                 responseData = {
                     title: item.name,
@@ -134,7 +140,7 @@ app.post('/api/movie-capture', async (req, res) => {
                     type: 'tv'
                 };
             }
-
+            // Send response data if available
             if (responseData) {
                 res.json(responseData);
             } else {
