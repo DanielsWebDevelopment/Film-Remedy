@@ -96,20 +96,16 @@ app.post('/api/movie-capture', async (req, res) => {
 
     try {
         const image = imageData.split(',')[1];
-        // remove after testing
-        console.log('Received image data size:', image.length);
-
-        const [result] = await client.labelDetection(Buffer.from(image, 'base64'));
-        // remove after testing
-        console.log('Labels:', result.labelAnnotations.map(label => label.description));
+        const request = {
+            image: { content: image },
+            features: [{ type: 'LABEL_DETECTION' }]
+        };
+        const [result] = await client.annotateImage(request);
         
         const labels = result.labelAnnotations;
-
-        // Using all labels for a more comprehensive search
         const searchTerms = labels.slice(0, 5).map(label => label.description);
         const searchQuery = searchTerms.join(' ');
 
-        // Changed from 'movie' to 'multi' to search for both movies and TV shows
         const tmdbResponse = await axios.get('https://api.themoviedb.org/3/search/multi', {
             params: {
                 api_key: TMDB_API_KEY,
@@ -121,7 +117,6 @@ app.post('/api/movie-capture', async (req, res) => {
             const item = tmdbResponse.data.results[0];
             let responseData;
 
-            // Handling both movie and TV show results
             if (item.media_type === 'movie') {
                 responseData = {
                     title: item.title,
