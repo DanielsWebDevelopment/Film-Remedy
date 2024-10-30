@@ -80,33 +80,34 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(scanFrame, 1000);
     }
 
-        async function recognizeMovie(imageData) {
-            try {
-                displayStatus('Analyzing image...'); 
-                const response = await fetch('https://film-remedy.onrender.com/api/movie-capture', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    // Send the captured image data
-                    body: JSON.stringify({ imageData }),
-                });
-                if (!response.ok) {
-                    throw new Error('Movie recognition failed');
-                }
-                // Parse and handle the response from the server
-                const movieInfo = await response.json();
-                if (movieInfo.title) {
-                    displayResult(movieInfo);
-                    stopScanning();
-                } else {
-                    displayStatus('No movie recognized. Keep scanning...');
-                    hideResult();
-                }
-            } catch (error) {
-                console.error('Error recognizing movie:', error);
-                displayError('Failed to recognize movie. Please try again.');
+       async function recognizeMovie(imageData) {
+        try {
+            displayStatus('Analyzing image...'); 
+            const response = await fetch('https://film-remedy.onrender.com/api/movie-capture', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ imageData }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Movie recognition failed');
             }
+
+            const movieInfo = await response.json();
+
+            if (movieInfo.title) {
+                displayResult(movieInfo);
+                stopScanning();
+            } else {
+                displayStatus('No movie recognized. Keep scanning...');
+                hideResult();
+            }
+        } catch (error) {
+            console.error('Error recognizing movie:', error);
+            displayError('Failed to recognize movie. Please try again.');
+        }
     }
 
     function displayStatus(message) {
