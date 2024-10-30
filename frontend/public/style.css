@@ -829,6 +829,13 @@ html {
   object-fit: cover;
 }
 
+.panel-image video {
+  width: 100%;
+  height: 100vh;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
 .panel__container .panel-content .panel-header .panel-image::before {
   content: "";
   position: absolute;
