@@ -801,6 +801,19 @@ html {
   padding-bottom: 120px;
 }
 
+.panel-image canvas,
+.status-message,
+.scanning-overlay, 
+.close-camera button {
+  display: none;
+}
+
+.panel-title,
+.panel-rating, 
+.panel-desc {
+  display: none;
+}
+
 .panel__container .panel-content .panel-header .panel-image {
   position: relative;
 }
