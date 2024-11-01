@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
                 },
                 body: JSON.stringify({ imageData }),
             });
