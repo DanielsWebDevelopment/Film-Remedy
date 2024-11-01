@@ -98,8 +98,13 @@ app.post('/api/movie-capture', async (req, res) => {
         const image = imageData.split(',')[1];
         
         const request = {
-            image: { content: image },
-            features: [{ type: 'LABEL_DETECTION' }]
+            image: {
+                content: image, 
+            },
+            features: [
+                { type: 'LABEL_DETECTION' },
+                { type: 'TEXT_DETECTION' },
+            ],
         };
         
         const [result] = await client.annotateImage(request);
