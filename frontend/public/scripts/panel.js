@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ imageData: base64Image }),
+                body: JSON.stringify({ imageData }),
             });
 
             if (!response.ok) {
